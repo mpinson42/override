@@ -1,0 +1,16 @@
+int main()
+{
+	int nb;
+	puts("***********************************");
+	puts("* \t     -Level00 -\t\t  *");
+	puts("***********************************");
+	printf("Password:");
+	scanf(stdin, "%d",nb)
+	if(nb == 5276)
+	{
+		puts("\nAuthenticated!");
+		system("/bin/sh");
+	}
+	else
+		puts("\nInvalid Password!");
+}

