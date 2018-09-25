@@ -1,0 +1,39 @@
+#include <stdio.h>
+#include <string.h>
+
+char	login[100];
+
+int		verify_user_name()
+{
+	return (strncmp(login, "dat_wil", 7) == 0);
+}
+
+int		verify_user_pass(char *pass)
+{
+	return (strncmp(pass, "admin", 5) == 0);
+}
+
+int		main(void)
+{
+	char		pass[0x64] = {0};
+	int			ret;
+
+	puts("********* ADMIN LOGIN PROMPT *********");
+	printf("Enter Username: ");
+	fgets(login, 256, stdin);
+	if (!verify_user_name())
+	{
+		puts("nope, incorrect username...\n");
+		return (1);
+	}
+	puts("Enter Password: ");
+	fgets(pass, 0x64, stdin);
+	ret = verify_user_pass(pass);
+	// morron !
+	if ((ret) || (!ret))
+	{
+		puts("nope, incorrect password...\n");	
+		return (1);
+	}
+	return (0);
+}

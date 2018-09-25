@@ -1,0 +1,31 @@
+on lance avec gdb:
+
+on met un premier break pour pouvoir jump au dessus de
+la verification de ptrace a 0x080487ae
+puis on met un second breakpoint a 0x08048869
+
+donc:
+gdb ./level06
+> b *0x080487ae
+> b *0x08048869
+> r
+> jump *0x080487ed
+(gdb) i r
+eax            0x7b	123
+
+on voit que la comparaison se fait avec $ebp-0x10 donc:
+(gdb) x/dw $ebp-0x10
+0xffffd6a8:	6229050
+
+level06@OverRide:~$ ./level06 
+***********************************
+*		level06		  *
+***********************************
+-> Enter Login: AAAAAA
+***********************************
+***** NEW ACCOUNT DETECTED ********
+***********************************
+-> Enter Serial: 6229050
+Authenticated!
+$ cat /home/users/level07/.pass
+GbcPDRgsFK77LNnnuh7QyFYA2942Gp8yKj9KrWD8

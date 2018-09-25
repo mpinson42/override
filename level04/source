@@ -1,0 +1,40 @@
+#include <stdio.h>
+#include <sys/ptctl.h>
+
+int main(void)
+{
+    pid_t   pid = fork();
+    char    buf[128] = {0};
+    int     x;
+    int     call;
+
+    if (pid == 0)
+    {
+        prctl(4, 1);
+        ptrace(1, 0, NULL, NULL);
+        puts("give me some shellcode, k");
+        gets(buf);
+    }
+    else
+    {
+        while (1)
+        {
+            wait(&x);
+            if (blah blah blah)
+            {
+                puts("child is exiting...");
+                break ;
+            }
+            // retrive the PEEKUSER information.
+            // see /usr/include/sys/ptrace.h
+            call = ptrace(3, pid, 44, NULL);
+            if (call == 11)
+            {
+                puts("no exec() for you");
+                kill(pid, 9);
+                break ;
+            }
+        }
+    }
+    return (0);
+}

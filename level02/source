@@ -1,0 +1,50 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int		main(void)
+{
+	char		username[100];
+	char		secret[41];
+	char		password[100];
+	FILE		*pass_file;
+	int			readsize;
+
+	memset(username, 0, 100);
+	memset(password, 0, 100);
+	memset(secret, 0, 41);
+	pass_file = fopen("/home/users/level03/.pass", "r");
+	if (!pass_file)
+	{
+		fwrite("ERROR: failed to open password file\n", 36, 1, stderr);
+		exit(1);
+	}
+	readsize = fread(secret, 1, 41, pass_file);
+	if (readsize != 41)
+	{
+		
+		fwrite("ERROR: failed to read password file\n", 36, 1, stderr);
+		exit(1);
+	}
+	fclose(pass_file);
+	puts("===== [ Secure Access System v1.0 ] =====");
+	puts("/***************************************\\");
+	puts("| You must login to access this system. |");
+	puts("\\***************************************/");
+	printf("--[ Password: ");
+	fgets(secret, 41, stdin);
+	secret[strcspn(secret, "\n")] = '\0';
+	puts("*****************************************");
+	if (strncmp(secret, password, 41) != 0)
+	{
+		printf("Greetings, %s!\n", username);
+		system("/bin/sh");
+		return (0);
+	}
+	else
+	{
+		printf(username);
+		puts(" does not have access!\n");
+		exit(1);
+	}
+}

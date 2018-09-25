@@ -1,0 +1,15 @@
+gdb level00
+
+on voit dans le code un appel a scanf avec %d en format, on sait donc que le
+pass est un int, plus bas dans le code disas on vois une comparaison avec
+0x149c (5276), on lance donc:
+
+level00@OverRide:~$ ./level00
+***********************************
+* 	     -Level00 -		  *
+***********************************
+Password:5276
+
+Authenticated!
+$ cat /home/users/level01/.pass
+uSq2ehEGT6c9S24zbshexZQBXUGrncxn5sD5QfGL

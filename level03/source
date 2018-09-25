@@ -1,0 +1,49 @@
+#include <stdio.h>
+
+void    decrypt(unsigned int key)
+{
+    unsigned int        l;                                  // 4
+    unsigned int        i;                                  // 8
+    char                crap[16] = "Q}|u`sfg~sf{}|a3";      // 24
+
+    l = strlen(crap);
+    i = 0;
+    while (i < l)
+    {
+        crap[i] ^= key;
+        i++;
+    }
+    if (strcmp(crap, "Congratulation!") == 0)
+        system("/bin/sh");
+    else
+        puts("\nInvalid Password");
+}
+
+// the fact that a "ja" is performet let me assume that they are unsigned.
+void    test(unsigned int x, unsigned int key)
+{
+    int         m;
+
+    m = key - x;
+    // equivalence au switch ou a la foret de ifs
+    if ((m > 0x1) && (m < 0x15))
+        decrypt(m);
+    else
+        decrypt(rand());
+}
+
+
+int     main(void)
+{
+    char        buf[20];
+    int         x;
+
+    srand(time(NULL));
+    puts("************************************");
+    puts("*\t\tlevel03\t\t**");
+    puts("************************************");
+    printf("Password: ");
+    scanf("%d", &x);
+    test(x, 0x1337d00d);
+    return (0);
+}

