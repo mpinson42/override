@@ -1,8 +1,0 @@
-pas grand chose a fair on dois savoir le pass pour lancer un shell on a un probleme de bootstrat :/
-mais on peu voir une faille a printf, haha on sais que il a mis le flag en memoir dans le programe ^^
-le flag fait 40 char on est en 64 bits donc on dois trouver une suit coerante de 5 adresse (5 * 8) pour avoir le flag
-
-python -c "print '%p '*100" | ./level02
-
-on se rend compts que apres tout les %p en memoir se trouve 5 adresse, meton les en ascii en inverent l'ordre et voila :
-Hh74RPnuQ9sa5JAEXgNWCqz7sXGnh5J5M9KfPg3H
